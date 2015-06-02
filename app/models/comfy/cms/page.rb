@@ -3,11 +3,17 @@
 class Comfy::Cms::Page < ActiveRecord::Base
   self.table_name = 'comfy_cms_pages'
 
-  cms_acts_as_tree :counter_cache => :children_count
+  cms_acts_as_tree
   cms_is_categorized
   cms_is_mirrored
   cms_manageable
   cms_has_revisions_for :blocks_attributes
+
+  # needed because we've disabled the counter cache for child pages
+  # because bug w/ Rails 4.2
+  def children_count
+    children.size
+  end
 
   # -- Relationships --------------------------------------------------------
   belongs_to :site
